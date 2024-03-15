@@ -61,6 +61,9 @@ class _HomeState extends State<Home> {
                   List<ColumnModel> columns = wordModelling(outputText);
                   List<String> tableNames = returnTableName2(outputText);
 
+                  //testing
+                  print(tableNames);
+
                   int maxNameLength = 0;
                   int maxDataTypeLength = 0;
 

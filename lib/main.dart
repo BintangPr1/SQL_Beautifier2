@@ -61,13 +61,9 @@ class _HomeState extends State<Home> {
                   List<ColumnModel> columns = wordModelling(outputText);
                   List<String> tableNames = returnTableName2(outputText);
 
-                  //testing
-                  print(tableNames);
-
                   int maxNameLength = 0;
                   int maxDataTypeLength = 0;
 
-                  //finding maximum length
                   for (ColumnModel columnModel in columns) {
                     if (columnModel.name.length < maxNameLength) {
                       continue;
@@ -109,7 +105,7 @@ class _HomeState extends State<Home> {
                         }
                       } else if (column.option == columns.last.option) {
                         formattedOutput +=
-                            '   ${column.name} ${column.dataType.toUpperCase()} ${column.option.toUpperCase()}\n';
+                            '   ${column.name} ${column.dataType.toUpperCase()} ${column.option.toUpperCase()}\n);\n\n';
                       } else {
                         formattedOutput +=
                             '   ${column.name} ${column.dataType.toUpperCase()} ${column.option.toUpperCase()},\n';
@@ -117,6 +113,56 @@ class _HomeState extends State<Home> {
                     }
                     i++;
                   }
+
+                  // -- comment
+
+                  int dashCount = 0;
+                  int startIndex = 0;
+                  int endIndex = 0;
+                  String commented = '';
+
+                  if (textarea.text.contains('--')) {
+                    List<String> parts = textarea.text.split('--');
+                    dashCount = parts.length - 1;
+                  }
+
+                  for (int i = 0; i < dashCount; i++) {
+                    if (textarea.text.contains('--')) {
+                      startIndex = textarea.text.indexOf('--');
+
+                      if (startIndex != -1) {
+                        endIndex = textarea.text.indexOf('\n', startIndex);
+
+                        if (endIndex != -1) {
+                          commented =
+                              textarea.text.substring(startIndex, endIndex);
+                        }
+                      }
+                    }
+                  }
+                  print(formattedOutput);
+                  print(commented);
+
+                  //dash dash comment
+                  String escapedString2 =
+                      RegExp.escape(commented.replaceAll(RegExp(r'\s+'), ' '));
+
+                  RegExp pattern = RegExp(
+                      escapedString2.replaceAll(RegExp(r'\s+'), '\\s+'),
+                      caseSensitive: false);
+
+                  formattedOutput =
+                      formattedOutput.replaceAll(pattern, commented);
+
+                  //  multiline comment
+
+                  // int startIndexComment = formattedOutput.indexOf('/*');
+                  // int endIndexComment = formattedOutput.indexOf('*/');
+
+                  // String multiLineComment = formattedOutput.substring(
+                  //     startIndexComment + 2, endIndexComment);
+
+                  // print(multiLineComment);
                 });
               },
               child: const Text("Submit"),

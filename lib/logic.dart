@@ -9,7 +9,6 @@ class ColumnModel {
 List<String> returnTableName2(String input) {
   List<String> tableStatements = [];
 
-  // Split the input string by ';'
   List<String> statements = input.split(';');
 
   for (String statement in statements) {
@@ -18,7 +17,7 @@ List<String> returnTableName2(String input) {
       int endIndex = statement.indexOf('(');
       if (endIndex != -1) {
         String tableName = statement.substring(startIndex, endIndex).trim();
-        // Capitalize the first two words
+
         tableName = capitalizeFirstTwoWords(tableName);
         tableStatements.add(tableName);
       }

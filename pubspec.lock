@@ -25,14 +25,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.0"
-  charcode:
-    dependency: transitive
-    description:
-      name: charcode
-      sha256: fb98c0f6d12c920a02ee2d998da788bca066ca5f148492b7085ee23372b12306
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.3.1"
   clock:
     dependency: transitive
     description:
@@ -152,14 +144,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.10.0"
-  sqlparser:
-    dependency: "direct main"
-    description:
-      name: sqlparser
-      sha256: "7b20045d1ccfb7bc1df7e8f9fee5ae58673fce6ff62cefbb0e0fd7214e90e5a0"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.34.1"
   stack_trace:
     dependency: transitive
     description:

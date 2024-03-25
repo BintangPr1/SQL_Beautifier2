@@ -115,7 +115,6 @@ class _HomeState extends State<Home> {
                   }
 
                   // -- comment
-
                   int dashCount = 0;
                   int startIndex = 0;
                   int endIndex = 0;
@@ -124,11 +123,9 @@ class _HomeState extends State<Home> {
                   if (textarea.text.contains('--')) {
                     List<String> parts = textarea.text.split('--');
                     dashCount = parts.length - 1;
-                  }
 
-                  for (int i = 0; i < dashCount; i++) {
-                    if (textarea.text.contains('--')) {
-                      startIndex = textarea.text.indexOf('--');
+                    for (int i = 0; i < dashCount; i++) {
+                      startIndex = textarea.text.indexOf('--', endIndex);
 
                       if (startIndex != -1) {
                         endIndex = textarea.text.indexOf('\n', startIndex);
@@ -136,23 +133,20 @@ class _HomeState extends State<Home> {
                         if (endIndex != -1) {
                           commented =
                               textarea.text.substring(startIndex, endIndex);
+
+                          String escapedString2 = RegExp.escape(
+                              commented.replaceAll(RegExp(r'\s+'), ' '));
+
+                          RegExp pattern = RegExp(
+                              escapedString2.replaceAll(RegExp(r'\s+'), '\\s+'),
+                              caseSensitive: false);
+
+                          formattedOutput =
+                              formattedOutput.replaceAll(pattern, commented);
                         }
                       }
                     }
                   }
-                  print(formattedOutput);
-                  print(commented);
-
-                  //dash dash comment
-                  String escapedString2 =
-                      RegExp.escape(commented.replaceAll(RegExp(r'\s+'), ' '));
-
-                  RegExp pattern = RegExp(
-                      escapedString2.replaceAll(RegExp(r'\s+'), '\\s+'),
-                      caseSensitive: false);
-
-                  formattedOutput =
-                      formattedOutput.replaceAll(pattern, commented);
 
                   //  multiline comment
 

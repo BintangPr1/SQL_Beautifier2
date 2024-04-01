@@ -115,8 +115,15 @@ class _HomeState extends State<Home> {
                           formattedOutput +=
                               '   ${column.name} ${column.dataType} ${column.option}\n';
                         } else {
-                          formattedOutput +=
-                              '   ${column.name} ${column.dataType} ${column.option},\n';
+                          if (column.name.contains('--') ||
+                              column.dataType.contains('--') ||
+                              column.option.contains('--')) {
+                            formattedOutput +=
+                                '   ${column.name} ${column.dataType} ${column.option}\n';
+                          } else {
+                            formattedOutput +=
+                                '   ${column.name} ${column.dataType} ${column.option},\n';
+                          }
                         }
                       }
                     }

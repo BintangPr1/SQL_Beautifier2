@@ -12,12 +12,10 @@ List<String> returnTableName2(String input) {
   List<String> statements = input.split(';');
 
   for (String statement in statements) {
-    int startIndex = statement.toLowerCase().indexOf('create table');
-    if (startIndex != -1) {
+    if (statement.trim().isNotEmpty) {
       int endIndex = statement.indexOf('(');
       if (endIndex != -1) {
-        String tableName = statement.substring(startIndex, endIndex).trim();
-
+        String tableName = statement.substring(0, endIndex).trim();
         tableName = capitalizeFirstTwoWords(tableName);
         tableStatements.add(tableName);
       }
@@ -38,7 +36,6 @@ String capitalizeFirstTwoWords(String text) {
 
 List<ColumnModel> wordModelling(String input) {
   List<ColumnModel> columns = [];
-
   List<String> statements = input.trim().split(';');
 
   for (String statement in statements) {
@@ -46,29 +43,76 @@ List<ColumnModel> wordModelling(String input) {
       int startIndex = statement.indexOf('(');
 
       int endIndex = statement.lastIndexOf(')');
+      const doubleSpace = '  ';
 
       String columnDefinitions = statement.substring(startIndex + 1, endIndex);
+      final lines = columnDefinitions.split('\n');
 
-      List<String> parts = columnDefinitions.split(',');
+      for (var line in lines) {
+        if (line.contains('--')) {
+          do {
+            line = line.replaceAll(doubleSpace, ' ');
+          } while (line.contains(doubleSpace));
+          line = line.trim();
 
-      for (String part in parts) {
-        String name = '';
-        String dataType = '';
-        String option = '';
+          var args = line.split(' ');
 
-        List<String> tokens = part.trim().split(RegExp(r'\s+(?![^(]*\))'));
+          String name = args[0];
+          String dataType = args[1];
+          String option = '';
+          if (args.length > 2) {
+            option =
+                line.replaceFirst('$name $dataType', '').trim().toLowerCase();
+            int commaIndex = option.indexOf(',');
+            if (commaIndex != -1) {
+              option = option.replaceRange(
+                  0, commaIndex, option.substring(0, commaIndex).toUpperCase());
+            }
+          }
+          columns.add(ColumnModel(name, dataType, option));
+          continue;
+        }
+        final length = line.split(',').length;
 
-        if (tokens.isNotEmpty) {
-          name = tokens[0];
-          if (tokens.length > 1) {
-            dataType = tokens[1];
-            if (tokens.length > 2) {
-              option = tokens.sublist(2).join(' ');
+        if (length > 0) {
+          var columnsData = line.split(',');
+
+          for (var columnData in columnsData) {
+            if (columnData.trim().isEmpty) {
+              continue;
+            }
+            do {
+              columnData = columnData.replaceAll(doubleSpace, ' ');
+            } while (columnData.contains(doubleSpace));
+            columnData = columnData.trim();
+
+            var args = columnData.split(' ');
+
+            // print(args);
+            // print(columnData);
+            if (columnData.contains('--')) {
+              String name = args[0];
+              String dataType = args[1];
+              String option = '';
+              if (args.length > 2) {
+                option = columnData
+                    .replaceFirst('$name $dataType', '')
+                    .trim()
+                    .toLowerCase();
+              }
+              columns.add(ColumnModel(name, dataType, option));
+            } else {
+              String name = args[0];
+              String dataType = args[1];
+              String option = '';
+              if (args.length > 2) {
+                option = columnData.replaceFirst('$name $dataType', '').trim();
+              }
+              columns.add(ColumnModel(
+                  name, dataType.toUpperCase(), option.toUpperCase()));
             }
           }
         }
-
-        columns.add(ColumnModel(name, dataType, option.trim()));
       }
     }
   }

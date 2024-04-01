@@ -94,69 +94,68 @@ class _HomeState extends State<Home> {
                       if (column.option.isEmpty) {
                         if (column.dataType == columns.last.dataType) {
                           formattedOutput +=
-                              '   ${column.name} ${column.dataType.toUpperCase()}\n);\n\n';
+                              '   ${column.name} ${column.dataType}\n);\n\n';
                           if (i + 1 >= tableNames.length) {
                             break;
                           }
                           formattedOutput += '${tableNames[++i]} (\n';
                         } else {
                           formattedOutput +=
-                              '   ${column.name} ${column.dataType.toUpperCase()},\n';
+                              '   ${column.name} ${column.dataType},\n';
                         }
                       } else if (column.option == columns.last.option) {
                         formattedOutput +=
-                            '   ${column.name} ${column.dataType.toUpperCase()} ${column.option.toUpperCase()}\n);\n\n';
+                            '   ${column.name} ${column.dataType} ${column.option}\n);\n\n';
                       } else {
-                        formattedOutput +=
-                            '   ${column.name} ${column.dataType.toUpperCase()} ${column.option.toUpperCase()},\n';
+                        int commaIndex = column.option.indexOf(',');
+                        if (commaIndex != -1 &&
+                            column.option
+                                .substring(commaIndex)
+                                .contains('--')) {
+                          formattedOutput +=
+                              '   ${column.name} ${column.dataType} ${column.option}\n';
+                        } else {
+                          formattedOutput +=
+                              '   ${column.name} ${column.dataType} ${column.option},\n';
+                        }
                       }
                     }
                     i++;
                   }
 
                   // -- comment
-                  int dashCount = 0;
-                  int startIndex = 0;
-                  int endIndex = 0;
-                  String commented = '';
+                  // int dashCount = 0;
+                  // int startIndex = 0;
+                  // int endIndex = 0;
+                  // String commented = '';
 
-                  if (textarea.text.contains('--')) {
-                    List<String> parts = textarea.text.split('--');
-                    dashCount = parts.length - 1;
+                  // if (textarea.text.contains('--')) {
+                  //   List<String> parts = textarea.text.split('--');
+                  //   dashCount = parts.length - 1;
 
-                    for (int i = 0; i < dashCount; i++) {
-                      startIndex = textarea.text.indexOf('--', endIndex);
+                  //   for (int i = 0; i < dashCount; i++) {
+                  //     startIndex = textarea.text.indexOf('--', endIndex);
 
-                      if (startIndex != -1) {
-                        endIndex = textarea.text.indexOf('\n', startIndex);
+                  //     if (startIndex != -1) {
+                  //       endIndex = textarea.text.indexOf('\n', startIndex);
 
-                        if (endIndex != -1) {
-                          commented =
-                              textarea.text.substring(startIndex, endIndex);
+                  //       if (endIndex != -1) {
+                  //         commented =
+                  //             textarea.text.substring(startIndex, endIndex);
 
-                          String escapedString2 = RegExp.escape(
-                              commented.replaceAll(RegExp(r'\s+'), ' '));
+                  //         String escapedString2 = RegExp.escape(
+                  //             commented.replaceAll(RegExp(r'\s+'), ' '));
 
-                          RegExp pattern = RegExp(
-                              escapedString2.replaceAll(RegExp(r'\s+'), '\\s+'),
-                              caseSensitive: false);
+                  //         RegExp pattern = RegExp(
+                  //             escapedString2.replaceAll(RegExp(r'\s+'), '\\s+'),
+                  //             caseSensitive: false);
 
-                          formattedOutput =
-                              formattedOutput.replaceAll(pattern, commented);
-                        }
-                      }
-                    }
-                  }
-
-                  //  multiline comment
-
-                  // int startIndexComment = formattedOutput.indexOf('/*');
-                  // int endIndexComment = formattedOutput.indexOf('*/');
-
-                  // String multiLineComment = formattedOutput.substring(
-                  //     startIndexComment + 2, endIndexComment);
-
-                  // print(multiLineComment);
+                  //         formattedOutput =
+                  //             formattedOutput.replaceAll(pattern, commented);
+                  //       }
+                  //     }
+                  //   }
+                  // }
                 });
               },
               child: const Text("Submit"),

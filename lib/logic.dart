@@ -16,7 +16,8 @@ List<String> returnTableName2(String input) {
       int endIndex = statement.indexOf('(');
       if (endIndex != -1) {
         String tableName = statement.substring(0, endIndex).trim();
-        tableName = capitalizeFirstTwoWords(tableName);
+
+        tableName = capitalizedFirstTwoWords(tableName);
         tableStatements.add(tableName);
       }
     }
@@ -25,13 +26,35 @@ List<String> returnTableName2(String input) {
   return tableStatements;
 }
 
-String capitalizeFirstTwoWords(String text) {
-  List<String> words = text.split(' ');
-  for (int i = 0; i < words.length; i++) {
-    words[i] = words[i].toUpperCase();
-    if (i == 1) break;
+String capitalizedFirstTwoWords(String input) {
+  List<String> combinedLine = [];
+  List<String> lines = input.split('\n');
+  List<String> words = [];
+  String tableStatements = '';
+
+  for (var line in lines) {
+    // print(line);
+    if (line.startsWith('--')) {
+      combinedLine.add(line);
+      continue;
+    } else if (line.trim().isEmpty) {
+      combinedLine.add(line);
+
+      continue;
+    } else {
+      words = line.split(' ');
+      for (int i = 0; i < words.length; i++) {
+        words[i] = words[i].toUpperCase();
+        if (i == 1) break;
+      }
+      var combinedWords = '';
+      combinedWords = words.join(' ');
+      combinedLine.add(combinedWords);
+    }
   }
-  return words.join(' ');
+  tableStatements = combinedLine.join('\n');
+
+  return tableStatements;
 }
 
 List<ColumnModel> wordModelling(String input) {
@@ -70,6 +93,7 @@ List<ColumnModel> wordModelling(String input) {
             }
           }
           columns.add(ColumnModel(name, dataType, option));
+
           continue;
         }
         final length = line.split(',').length;
@@ -81,6 +105,7 @@ List<ColumnModel> wordModelling(String input) {
             if (columnData.trim().isEmpty) {
               continue;
             }
+
             do {
               columnData = columnData.replaceAll(doubleSpace, ' ');
             } while (columnData.contains(doubleSpace));

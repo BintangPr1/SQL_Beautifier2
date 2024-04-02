@@ -163,6 +163,39 @@ class _HomeState extends State<Home> {
                       }
                     }
                   }
+
+                  dashCount = 0;
+                  startIndex = 0;
+                  endIndex = 0;
+                  commented = '';
+
+                  if (textarea.text.contains('--')) {
+                    List<String> parts = textarea.text.split('--');
+                    dashCount = parts.length - 1;
+
+                    for (int i = 0; i < dashCount; i++) {
+                      startIndex = textarea.text.indexOf('--', endIndex);
+
+                      if (startIndex != -1) {
+                        endIndex = textarea.text.indexOf('\n', startIndex);
+
+                        if (endIndex != -1) {
+                          commented =
+                              textarea.text.substring(startIndex, endIndex);
+
+                          String escapedString2 = RegExp.escape(
+                              commented.replaceAll(RegExp(r'\s+'), ' '));
+
+                          RegExp pattern = RegExp(
+                              escapedString2.replaceAll(RegExp(r'\s+'), '\\s+'),
+                              caseSensitive: false);
+
+                          formattedOutput = formattedOutput.replaceAll(
+                              pattern, commented += '\n   ');
+                        }
+                      }
+                    }
+                  }
                 });
               },
               child: const Text("Submit"),

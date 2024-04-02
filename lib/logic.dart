@@ -92,7 +92,7 @@ List<ColumnModel> wordModelling(String input) {
                   0, commaIndex, option.substring(0, commaIndex).toUpperCase());
             }
           }
-          columns.add(ColumnModel(name, dataType, option));
+          columns.add(ColumnModel(name, dataType.toUpperCase(), option));
 
           continue;
         }
@@ -127,6 +127,11 @@ List<ColumnModel> wordModelling(String input) {
               }
               columns.add(ColumnModel(name, dataType, option));
             } else {
+              if (args.length == 1) {
+                String name = args[0];
+                columns.add(ColumnModel(name, '', ''));
+                continue;
+              }
               String name = args[0];
               String dataType = args[1];
               String option = '';

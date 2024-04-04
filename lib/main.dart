@@ -190,8 +190,8 @@ class _HomeState extends State<Home> {
                               escapedString2.replaceAll(RegExp(r'\s+'), '\\s+'),
                               caseSensitive: false);
 
-                          formattedOutput = formattedOutput.replaceAll(
-                              pattern, commented += '\n   ');
+                          formattedOutput =
+                              formattedOutput.replaceAll(pattern, commented);
                         }
                       }
                     }

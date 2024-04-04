@@ -69,6 +69,8 @@ List<ColumnModel> wordModelling(String input) {
       const doubleSpace = '  ';
 
       String columnDefinitions = statement.substring(startIndex + 1, endIndex);
+
+      print(columnDefinitions);
       final lines = columnDefinitions.split('\n');
 
       for (var line in lines) {

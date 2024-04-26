@@ -78,56 +78,101 @@ class _HomeState extends State<Home> {
                       maxDataTypeLength = columnModel.dataType.length;
                     }
                   }
+                  // formattedOutput += '${tableNames[0]} (\n';
+                  // int i = 0;
+                  // while (tableNames.length > i) {
+                  //   for (ColumnModel column in columns) {
+                  //     if (column.name.length < maxNameLength) {
+                  //       column.name +=
+                  //           ' '.padRight(maxNameLength - column.name.length);
+                  //     }
+                  //     if (column.dataType.length < maxDataTypeLength) {
+                  //       column.dataType += ' '.padRight(
+                  //           maxDataTypeLength - column.dataType.length);
+                  //     }
+                  //     if (column.option.isEmpty) {
+                  //       if (column.dataType == columns.last.dataType) {
+                  //         formattedOutput +=
+                  //             '   ${column.name} ${column.dataType}\n);\n\n';
+                  //         if (i + 1 >= tableNames.length) {
+                  //           break;
+                  //         }
+                  //         formattedOutput += '${tableNames[++i]} (\n';
+                  //       } else {
+                  //         formattedOutput +=
+                  //             '   ${column.name} ${column.dataType},\n';
+                  //       }
+                  //     } else if (column.option == columns.last.option) {
+                  //       formattedOutput +=
+                  //           '   ${column.name} ${column.dataType} ${column.option}\n);\n\n';
+                  //     } else {
+                  //       int commaIndex = column.option.indexOf(',');
+                  //       if (commaIndex != -1 &&
+                  //           column.option
+                  //               .substring(commaIndex)
+                  //               .contains('--')) {
+                  //         formattedOutput +=
+                  //             '   ${column.name} ${column.dataType} ${column.option}\n';
+                  //       } else {
+                  //         if (column.name.contains('--') ||
+                  //             column.dataType.contains('--') ||
+                  //             column.option.contains('--')) {
+                  //           formattedOutput +=
+                  //               '   ${column.name} ${column.dataType} ${column.option}\n';
+                  //         } else {
+                  //           formattedOutput +=
+                  //               '   ${column.name} ${column.dataType} ${column.option},\n';
+                  //         }
+                  //       }
+                  //     }
+                  //   }
+                  //   i++;
+                  // }
 
-                  formattedOutput += '${tableNames[0]} (\n';
                   int i = 0;
-                  while (tableNames.length > i) {
-                    for (ColumnModel column in columns) {
-                      if (column.name.length < maxNameLength) {
-                        column.name +=
-                            ' '.padRight(maxNameLength - column.name.length);
+
+                  formattedOutput += '${tableNames[0]}(\n';
+                  for (ColumnModel column in columns) {
+                    //untuk jarak antar model word
+                    if (column.name.length < maxNameLength) {
+                      column.name +=
+                          ' '.padRight(maxNameLength - column.name.length);
+                    }
+                    if (column.dataType.length < maxDataTypeLength) {
+                      column.dataType += ' '
+                          .padRight(maxDataTypeLength - column.dataType.length);
+                    }
+                    //kondisi jika ini adalah column akhir tabel
+                    if (column.name.contains(');')) {
+                      i++;
+
+                      formattedOutput +=
+                          '   ${column.name} ${column.dataType} ${column.option}\n';
+                      if (i == tableNames.length) {
+                        break;
                       }
-                      if (column.dataType.length < maxDataTypeLength) {
-                        column.dataType += ' '.padRight(
-                            maxDataTypeLength - column.dataType.length);
-                      }
-                      if (column.option.isEmpty) {
-                        if (column.dataType == columns.last.dataType) {
-                          formattedOutput +=
-                              '   ${column.name} ${column.dataType}\n);\n\n';
-                          if (i + 1 >= tableNames.length) {
-                            break;
-                          }
-                          formattedOutput += '${tableNames[++i]} (\n';
-                        } else {
-                          formattedOutput +=
-                              '   ${column.name} ${column.dataType},\n';
-                        }
-                      } else if (column.option == columns.last.option) {
+                      formattedOutput += '${tableNames[i]}(\n';
+                    } else if (column.option.isEmpty) {
+                      if (column.name.contains('--') ||
+                          column.dataType.contains('--') ||
+                          column.option.contains('--')) {
                         formattedOutput +=
-                            '   ${column.name} ${column.dataType} ${column.option}\n);\n\n';
+                            '   ${column.name} ${column.dataType}';
                       } else {
-                        int commaIndex = column.option.indexOf(',');
-                        if (commaIndex != -1 &&
-                            column.option
-                                .substring(commaIndex)
-                                .contains('--')) {
-                          formattedOutput +=
-                              '   ${column.name} ${column.dataType} ${column.option}\n';
-                        } else {
-                          if (column.name.contains('--') ||
-                              column.dataType.contains('--') ||
-                              column.option.contains('--')) {
-                            formattedOutput +=
-                                '   ${column.name} ${column.dataType} ${column.option}\n';
-                          } else {
-                            formattedOutput +=
-                                '   ${column.name} ${column.dataType} ${column.option},\n';
-                          }
-                        }
+                        formattedOutput +=
+                            '   ${column.name} ${column.dataType},\n';
+                      }
+                    } else {
+                      if (column.name.contains('--') ||
+                          column.dataType.contains('--') ||
+                          column.option.contains('--')) {
+                        formattedOutput +=
+                            '   ${column.name} ${column.dataType} ${column.option}';
+                      } else {
+                        formattedOutput +=
+                            '   ${column.name} ${column.dataType} ${column.option},\n';
                       }
                     }
-                    i++;
                   }
 
                   // -- comment
@@ -190,12 +235,24 @@ class _HomeState extends State<Home> {
                               escapedString2.replaceAll(RegExp(r'\s+'), '\\s+'),
                               caseSensitive: false);
 
-                          formattedOutput =
-                              formattedOutput.replaceAll(pattern, commented);
+                          formattedOutput = formattedOutput.replaceAll(
+                              pattern, commented += '\n   ');
                         }
                       }
                     }
                   }
+
+                  List<String> lines = formattedOutput.split('\n');
+                  for (int i = 0; i < lines.length; i++) {
+                    if (lines[i].startsWith('      ')) {
+                      lines[i] = lines[i].replaceFirst('   ', '');
+                    }
+                    if (lines[i].contains(');')) {
+                      lines[i] = lines[i].trim();
+                      lines[i] += '\n';
+                    }
+                  }
+                  formattedOutput = lines.join('\n');
                 });
               },
               child: const Text("Submit"),
